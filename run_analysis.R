@@ -30,24 +30,35 @@ table(meanstd)
 varSelected <- gsub("()", "", gsub("-", ".", features[meanstd,2]), fixed=T) #rename variables
 length(varSelected)
 
-# read in test data
-subjecttest <- read.table(".\\UCI HAR Dataset\\test\\subject_test.txt", col.names="subject") # read in subject data
-ytest <- read.table(".\\UCI HAR Dataset\\test\\y_test.txt", col.names="activity") # read in activity data 
-xtest <- read.table(".\\UCI HAR Dataset\\test\\X_test.txt") # read in the measurements
-xtestSelected <- xtest[,meanstd] # subset the mean and std variables
-names(xtestSelected) <- varSelected # rename the selected variables
+## read in test data
+# read in subject data
+subjecttest <- read.table(".\\UCI HAR Dataset\\test\\subject_test.txt", col.names="subject") 
+# read in activity data 
+ytest <- read.table(".\\UCI HAR Dataset\\test\\y_test.txt", col.names="activity") 
+# read in the measurements
+xtest <- read.table(".\\UCI HAR Dataset\\test\\X_test.txt") 
+# subset the mean and std variables
+xtestSelected <- xtest[,meanstd] 
+# rename the selected variables
+names(xtestSelected) <- varSelected
 
-test <- data.frame(subjecttest, ytest, xtestSelected) # merge into test data
+# merge into test data
+test <- data.frame(subjecttest, ytest, xtestSelected) 
 dim(test)
 
-# read in train data
-subjecttrain <- read.table(".\\UCI HAR Dataset\\train\\subject_train.txt", col.names="subject") # read in subject data
-ytrain <- read.table(".\\UCI HAR Dataset\\train\\y_train.txt", col.names="activity") # read in activity data 
+## read in train data
+# read in subject data
+subjecttrain <- read.table(".\\UCI HAR Dataset\\train\\subject_train.txt", col.names="subject") 
+# read in activity data
+ytrain <- read.table(".\\UCI HAR Dataset\\train\\y_train.txt", col.names="activity")  
 xtrain <- read.table(".\\UCI HAR Dataset\\train\\X_train.txt")
-xtrainSelected <- xtrain[,meanstd] # subset the mean and std variables
-names(xtrainSelected) <- varSelected # rename the selected variables
+# subset the mean and std variables
+xtrainSelected <- xtrain[,meanstd] 
+# rename the selected variables
+names(xtrainSelected) <- varSelected 
 
-train <- data.frame(subjecttrain, ytrain, xtrainSelected) # merge into train data
+# merge into train data
+train <- data.frame(subjecttrain, ytrain, xtrainSelected) 
 dim(train)
 
 # append two data sets (test and train data)
@@ -57,8 +68,11 @@ combine$subject <- factor(combine$subject)
 combine$activity <- factor(combine$activity)
 levels(combine$activity) <- activitylabels[,2]
 
-# preparing the tidy data
+# prepare the tidy data
 s <- split(combine, list(combine$subject, combine$activity), drop=TRUE)
 tidy <- sapply(s, function(x) colMeans(x[, varSelected]))
+colnames(tidy) <- paste(tolower(colnames(tidy)), "mean", sep=".")
 dim(tidy)
+
+# save as a text file
 write.table(tidy, file="TidyData.txt", sep="\t")

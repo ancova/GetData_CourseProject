@@ -28,19 +28,19 @@ All these codes were written and run at Windows 7 64-bit using R v3.1.0 and RStu
 
 4. Read in data. *activity_labels.txt* contains the class labels of all 6 acitivity names, and *features.txt* is the list of all 561 features vector with time and frequency domain variabls.
 
-```R
-activitylabels <- read.table(".\\UCI HAR Dataset\\activity_labels.txt")
-features <- read.table(".\\UCI HAR Dataset\\features.txt")
-dim(activitylabels)
-dim(features) 
-```
+    ```R
+    activitylabels <- read.table(".\\UCI HAR Dataset\\activity_labels.txt")
+    features <- read.table(".\\UCI HAR Dataset\\features.txt")
+    dim(activitylabels)
+    dim(features) 
+    ```
 
 5. Generate a boolean vector ``meanstd`` to indicate whether the measurement column is a mean or standard deviation. Set ``fixed=TRUE`` so the ``grepl()`` function will search for extact match of _mean()_ and _std()_. There are 495 **FALSE** and 66 **TRUE** in the vector.
 
-```R
-meanstd <- grepl("mean()", features[,2], fixed=TRUE) | grepl("std()", features[,2], fixed=TRUE) #pattern is a string to be matched as is.
-table(meanstd) 
-```
+    ```R
+    meanstd <- grepl("mean()", features[,2], fixed=TRUE) | grepl("std()", features[,2], fixed=TRUE) #pattern is a string to be matched as is.
+    table(meanstd) 
+    ```
 
 6. Extract all 66 measurements on the on the mean and standard deviation to another vector ``varSelected``. The variable names were renamed according to [Google R style guide][2]:
 	
@@ -48,53 +48,73 @@ table(meanstd)
 	
 	- Parentheses *()* were deleted
 
-```R
-varSelected <- gsub("()", "", gsub("-", ".", features[meanstd,2]), fixed=T) #rename variables
-length(varSelected) 
-```
+    ```R
+    varSelected <- gsub("()", "", gsub("-", ".", features[meanstd,2]), fixed=T) #rename variables
+    length(varSelected) 
+    ```
 
 7. Read in the test data and train data, which including the subject data, activity data, and 561 measurements. There are 2947 rows in test data and 7352 rows in train data.
 
-```R
-# read in test data
-subjecttest <- read.table(".\\UCI HAR Dataset\\test\\subject_test.txt", col.names="subject") # read in subject data
-ytest <- read.table(".\\UCI HAR Dataset\\test\\y_test.txt", col.names="activity") # read in activity data 
-xtest <- read.table(".\\UCI HAR Dataset\\test\\X_test.txt") # read in the measurements
-xtestSelected <- xtest[,meanstd] # subset the mean and std variables
-names(xtestSelected) <- varSelected # rename the selected variables
+    ```R
+    ## read in test data
+    # read in subject data
+    subjecttest <- read.table(".\\UCI HAR Dataset\\test\\subject_test.txt", col.names="subject") 
+    # read in activity data 
+    ytest <- read.table(".\\UCI HAR Dataset\\test\\y_test.txt", col.names="activity") 
+    # read in the measurements
+    xtest <- read.table(".\\UCI HAR Dataset\\test\\X_test.txt") 
+    # subset the mean and std variables
+    xtestSelected <- xtest[,meanstd] 
+    # rename the selected variables
+    names(xtestSelected) <- varSelected
 
-test <- data.frame(subjecttest, ytest, xtestSelected) # merge into test data
+    # merge into test data
+    test <- data.frame(subjecttest, ytest, xtestSelected) 
+    dim(test)
 
-# read in train data
-subjecttrain <- read.table(".\\UCI HAR Dataset\\train\\subject_train.txt", col.names="subject") # read in subject data
-ytrain <- read.table(".\\UCI HAR Dataset\\train\\y_train.txt", col.names="activity") # read in activity data 
-xtrain <- read.table(".\\UCI HAR Dataset\\train\\X_train.txt")
-xtrainSelected <- xtrain[,meanstd] # subset the mean and std variables
-names(xtrainSelected) <- varSelected # rename the selected variables
+    ## read in train data
+    # read in subject data
+    subjecttrain <- read.table(".\\UCI HAR Dataset\\train\\subject_train.txt", col.names="subject") 
+    # read in activity data
+    ytrain <- read.table(".\\UCI HAR Dataset\\train\\y_train.txt", col.names="activity")  
+    xtrain <- read.table(".\\UCI HAR Dataset\\train\\X_train.txt")
+    # subset the mean and std variables
+    xtrainSelected <- xtrain[,meanstd] 
+    # rename the selected variables
+    names(xtrainSelected) <- varSelected 
 
-train <- data.frame(subjecttrain, ytrain, xtrainSelected) # merge into train data 
+    # merge into train data
+    train <- data.frame(subjecttrain, ytrain, xtrainSelected) 
+    dim(train)
 
-```
+    ```
 
 8. Append test and train data into one data frame, which has 10299 rows and 68 columns. The ``subject`` and ``activity`` columns were converted into factors, and levels of factor ``activity`` were assigned with ``actitivitylabels``.
 
-```R
-combine <- rbind(train, test)
-dim(combine)
-combine$subject <- factor(combine$subject)
-combine$activity <- factor(combine$activity)
-levels(combine$activity) <- activitylabels[,2] 
-```
+    ```R
+    combine <- rbind(train, test)
+    dim(combine)
+    combine$subject <- factor(combine$subject)
+    combine$activity <- factor(combine$activity)
+    levels(combine$activity) <- activitylabels[,2] 
+    ```
 
-9. 5.Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
+9. Creates a second, independent tidy data set with the average of each variable for each activity and each subject. and rename the column names in ``subject.activity.mean`` format with lower case. There are 66 rows (means and stds for 33 measurements) and 180 columns (6 activities for 30 subjects).
 
-```R
-# preparing the tidy data
-s <- split(combine, list(combine$subject, combine$activity), drop=TRUE)
-tidy <- sapply(s, function(x) colMeans(x[, varSelected]))
-dim(tidy)
-write.table(tidy, file="TidyData.txt", sep="\t") 
-```
+    ```R
+    # prepare the tidy data
+    s <- split(combine, list(combine$subject, combine$activity), drop=TRUE)
+    tidy <- sapply(s, function(x) colMeans(x[, varSelected]))
+    colnames(tidy) <- paste(tolower(colnames(tidy)), "mean", sep=".")
+    dim(tidy)
+    ```
+
+10. Save out the tidy data as text file.
+
+    ```R
+    # save as a text file
+    write.table(tidy, file="TidyData.txt", sep="\t")
+    ```
 
 [1]: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 [2]: https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml
