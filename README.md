@@ -38,18 +38,19 @@ All these codes were written and run at Windows 7 64-bit using R v3.1.0 and RStu
 5. Generate a boolean vector ``meanstd`` to indicate whether the measurement column is a mean or standard deviation. Set ``fixed=TRUE`` so the ``grepl()`` function will search for extact match of _mean()_ and _std()_. There are 495 **FALSE** and 66 **TRUE** in the vector.
 
     ```R
-    meanstd <- grepl("mean()", features[,2], fixed=TRUE) | grepl("std()", features[,2], fixed=TRUE) #pattern is a string to be matched as is.
+    meanstd <- grepl("mean()", features[,2], fixed=TRUE) | grepl("std()", features[,2], fixed=TRUE) 
+    # Pattern is a string to be matched as is.
     table(meanstd) 
     ```
 
 6. Extract all 66 measurements on the on the mean and standard deviation to another vector ``varSelected``. The variable names were renamed according to [Google R style guide][2]:
 	
-	- Words were separated with dots (variable.name)
+	1. Words were separated with dots (*variable.name*)
 	
-	- Parentheses *()* were deleted
+	2. Parentheses *()* were deleted
 
     ```R
-    varSelected <- gsub("()", "", gsub("-", ".", features[meanstd,2]), fixed=T) #rename variables
+    varSelected <- gsub("()", "", gsub("-", ".", features[meanstd,2]), fixed=T) # rename variables
     length(varSelected) 
     ```
 
