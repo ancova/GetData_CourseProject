@@ -3,7 +3,7 @@ Code book for Course project
 
 ###STUDY DESIGN
 
-The data for the course project is from *Human Activity Recognition Using Smartphones Dataset* by Jorge L, RReyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto[[1][1]], which can be downloaded at [here][2]. The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING\_UPSTAIRS, WALKING\_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. More information could be found on the [website][2].
+The data for the course project is from *Human Activity Recognition Using Smartphones Dataset* by Jorge L, RReyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto[1], which can be downloaded at [here](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones). The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (walking, walking\_upstairs, walking\_downstairs, sitting, standing, laying) wearing a smartphone (Samsung Galaxy S II) on the waist. More information could be found on the website.
 
 As for the course project, data cleaning are following steps:
 
@@ -39,14 +39,14 @@ As for the course project, data cleaning are following steps:
 1. "subject": Factor. Identifies the subject who performed the activity. Its range is from 1 to 30. 
 
 1. "activity": Factor. Identifies the activity the subject performed. Its range is from 1 to 6.
-	1 WALKING
-	2 WALKING_UPSTAIRS
-	3 WALKING_DOWNSTAIRS
-	4 SITTING
-	5 STANDING
-	6 LAYING
+	- 1 walking
+	- 2 walking_upstairs
+	- 3 walking_downstairs
+	- 4 sitting
+	- 5 standing
+	- 6 laying
 
-1. The measurements were extracted from the raw data. They are all numeric, with the variable name in the ``measurements.mean(/std).XYZ" format, which is separated into 3 parts by dot (.). The first part is the measurements (see more at [features_info.txt][3]), the second is static (mean or standard deviation), and the third part is the suffix for XYZ axis. The complete list of variables is as follows.
+1. The measurements were extracted from the raw data. They are all numeric, with the variable name in the ``measurements.mean(/std).XYZ" format, which is separated into 3 parts by dot (.). The first part is the measurements (see more at [features_info.txt](.\\features_info.txt)), the second is static (mean or standard deviation), and the third part is the suffix for XYZ axis. The complete list of variables is as follows.
 	- tBodyAcc.mean.X"          
 	- "tBodyAcc.mean.Y"           
 	- "tBodyAcc.mean.Z"           
@@ -118,12 +118,11 @@ As for the course project, data cleaning are following steps:
 
 The tidy data contains the average of each variable for each activity and each subject. There are 66 rows (which identify the means and stds for 33 measurements, listed above), and 181 columns (1 for measurements, and 6 activities for 30 subjects). The columns are renamed ``subject.activity.mean`` format with lower case.
 	
-- ``suject`` denotes the subject who performed the activity. Its range is from 1 to 30.
+- ``subject`` denotes the subject who performed the activity. Its range is from 1 to 30.
 
 - ``activity`` denotes activity the subject performed. They are walking, walking_upstairs, walking_downstairs, sitting, standing, and laying.
 
 - ``mean`` denotes the average of each variable for each activity and each subject.
 
+
 [1] Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012.
-[2] http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
-[3]: ".\\features_info.txt"
