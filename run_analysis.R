@@ -1,3 +1,5 @@
+## Course project for _Getting and cleaning data_.
+
 # set the working directory
 setwd("K:\\MOOCs - Data Science Specialization\\3. Getting and Cleaning Data\\CourseProject")
 
