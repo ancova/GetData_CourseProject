@@ -3,7 +3,7 @@ Code book for Course project
 
 ###STUDY DESIGN
 
-The data for the course project is from *Human Activity Recognition Using Smartphones Dataset* by Jorge L, RReyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto[1], which can be downloaded at [here](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones). The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (walking, walking\_upstairs, walking\_downstairs, sitting, standing, laying) wearing a smartphone (Samsung Galaxy S II) on the waist. More information could be found on the website.
+The data for the course project is from *Human Activity Recognition Using Smartphones Dataset* by Jorge L, RReyes-Ortiz, Davide Anguita, *et. al*[1], which can be downloaded at [here](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones). The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (walking, walking\_upstairs, walking\_downstairs, sitting, standing, laying) wearing a smartphone (Samsung Galaxy S II) on the waist. More information could be found on the website.
 
 As for the course project, data cleaning are following steps:
 
@@ -116,7 +116,7 @@ As for the course project, data cleaning are following steps:
 
 #### The tidy data
 
-The tidy data contains the average of each variable for each activity and each subject. There are 66 rows (which identify the means and stds for 33 measurements, listed above), and 181 columns (1 for measurements, and 6 activities for 30 subjects). The columns are renamed ``subject.activity.mean`` format with lower case.
+The tidy data contains the average of each variable for each activity and each subject. There are 66 rows (which identify the means and stds for 33 measurements, listed above), and 181 columns (1 for measurements, and 6 activities for 30 subjects). The columns are renamed in ``subject.activity.mean`` format with lower case.
 	
 - ``subject`` denotes the subject who performed the activity. Its range is from 1 to 30.
 
