@@ -1,7 +1,19 @@
 Instruction list for course project
 ====================================
 
-All these codes were written and run at Windows 7 64-bit using R v3.1.0 and RStudio v0.98.501.
+All these codes were written and run at Windows 7 64-bit using R v3.1.0 and RStudio v0.98.501. 
+
+The repo includes the following files:
+
+- 'README.md':  Explains how all of the scripts work and how they are connected.
+
+- 'CodeBook.md':  Describes the variables, the data, and any transformations or work that you performed to clean up the data .
+
+- 'run_analysis.R': A R script that does all the requirements for the project.
+
+- 'TidyData.txt': A TAB-delimited text file with the average of each variable for each activity and each subject.
+
+### Steps of the R Script
 
 1. Set the working directory using ``setwd()`` function;
 
@@ -100,21 +112,22 @@ All these codes were written and run at Windows 7 64-bit using R v3.1.0 and RStu
     levels(combine$activity) <- activitylabels[,2] 
     ```
 
-9. Creates a second, independent tidy data set with the average of each variable for each activity and each subject. and rename the column names in ``subject.activity.mean`` format with lower case. There are 66 rows (means and stds for 33 measurements) and 180 columns (6 activities for 30 subjects).
+9. Creates a second, independent tidy data set with the average of each variable for each activity and each subject. and rename the column names in ``subject.activity.mean`` format with lower case. There are 66 rows (means and stds for 33 measurements) and 181 columns (1 for measurements, and 6 activities for 30 subjects).
 
     ```R
     # prepare the tidy data
     s <- split(combine, list(combine$subject, combine$activity), drop=TRUE)
-    tidy <- sapply(s, function(x) colMeans(x[, varSelected]))
+    tidy <- as.data.frame(sapply(s, function(x) colMeans(x[, varSelected])))
     colnames(tidy) <- paste(tolower(colnames(tidy)), "mean", sep=".")
+    tidy <- cbind(measurements=rownames(tidy),tidy)
     dim(tidy)
     ```
 
-10. Save out the tidy data as text file.
+10. Save out the tidy data as TAB-delimited text file.
 
     ```R
     # save as a text file
-    write.table(tidy, file="TidyData.txt", sep="\t")
+    write.table(tidy, file="TidyData.txt", sep="\t", row.names=FALSE)
     ```
 
 [1]: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip

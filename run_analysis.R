@@ -72,9 +72,10 @@ levels(combine$activity) <- activitylabels[,2]
 
 # prepare the tidy data
 s <- split(combine, list(combine$subject, combine$activity), drop=TRUE)
-tidy <- sapply(s, function(x) colMeans(x[, varSelected]))
+tidy <- as.data.frame(sapply(s, function(x) colMeans(x[, varSelected])))
 colnames(tidy) <- paste(tolower(colnames(tidy)), "mean", sep=".")
+tidy <- cbind(measurements=rownames(tidy),tidy)
 dim(tidy)
 
 # save as a text file
-write.table(tidy, file="TidyData.txt", sep="\t")
+write.table(tidy, file="TidyData.txt", sep="\t", row.names=FALSE)
