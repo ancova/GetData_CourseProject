@@ -24,7 +24,8 @@ dim(activitylabels)
 dim(features)
 
 # select the mean and std variables
-meanstd <- grepl("mean()", features[,2], fixed=TRUE) | grepl("std()", features[,2], fixed=TRUE) #pattern is a string to be matched as is.
+meanstd <- grepl("mean()", features[,2], fixed=TRUE) | grepl("std()", features[,2], fixed=TRUE) 
+#pattern is a string to be matched as is.
 table(meanstd)
 varSelected <- gsub("()", "", gsub("-", ".", features[meanstd,2]), fixed=T) #rename variables
 length(varSelected)
@@ -37,6 +38,7 @@ xtestSelected <- xtest[,meanstd] # subset the mean and std variables
 names(xtestSelected) <- varSelected # rename the selected variables
 
 test <- data.frame(subjecttest, ytest, xtestSelected) # merge into test data
+dim(test)
 
 # read in train data
 subjecttrain <- read.table(".\\UCI HAR Dataset\\train\\subject_train.txt", col.names="subject") # read in subject data
@@ -46,9 +48,11 @@ xtrainSelected <- xtrain[,meanstd] # subset the mean and std variables
 names(xtrainSelected) <- varSelected # rename the selected variables
 
 train <- data.frame(subjecttrain, ytrain, xtrainSelected) # merge into train data
+dim(train)
 
 # append two data sets (test and train data)
 combine <- rbind(train, test)
+dim(combine)
 combine$subject <- factor(combine$subject)
 combine$activity <- factor(combine$activity)
 levels(combine$activity) <- activitylabels[,2]

@@ -7,24 +7,24 @@ All these codes were written and run at Windows 7 64-bit using R v3.1.0 and RStu
 
 2. Download the data zip file from the given url [https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip][1], and the current data and time will be assigned to _dataDownlaod_ object. If the "UCI HAR Dataset.zip" file exits in the working directory, a message _The data file has been downloaded already._ will be printed out, and the program will not download it again. 
 
-```R
-if (!file.exists("UCI HAR Dataset.zip")) {
-    download.file(fileUrl, destfile="UCI HAR Dataset.zip")
-    dateDownloaded <- date()
-    } else {
-        message("The data file has been downloaded already.")
-    } //R
-```
+    ```R
+    if (!file.exists("UCI HAR Dataset.zip")) {
+        download.file(fileUrl, destfile="UCI HAR Dataset.zip")
+        dateDownloaded <- date()
+        } else {
+            message("The data file has been downloaded already.")
+        } 
+    ```
 
 3. Unzip the download file. Again, the program will check whether the folder _UCI HAR Dataset_ exits by using the ``file.exits()`` function.
 
-```R
-if (!file.exists("UCI HAR Dataset")) {
-    unzip("UCI HAR Dataset.zip")
-    } else {
-        message("The file is already unzipped.")
-        } //R
-```
+    ```R
+    if (!file.exists("UCI HAR Dataset")) {
+        unzip("UCI HAR Dataset.zip")
+        } else {
+            message("The file is already unzipped.")
+            } 
+    ```
 
 4. Read in data. *activity_labels.txt* contains the class labels of all 6 acitivity names, and *features.txt* is the list of all 561 features vector with time and frequency domain variabls.
 
@@ -32,14 +32,14 @@ if (!file.exists("UCI HAR Dataset")) {
 activitylabels <- read.table(".\\UCI HAR Dataset\\activity_labels.txt")
 features <- read.table(".\\UCI HAR Dataset\\features.txt")
 dim(activitylabels)
-dim(features) //R
+dim(features) 
 ```
 
 5. Generate a boolean vector ``meanstd`` to indicate whether the measurement column is a mean or standard deviation. Set ``fixed=TRUE`` so the ``grepl()`` function will search for extact match of _mean()_ and _std()_. There are 495 **FALSE** and 66 **TRUE** in the vector.
 
 ```R
 meanstd <- grepl("mean()", features[,2], fixed=TRUE) | grepl("std()", features[,2], fixed=TRUE) #pattern is a string to be matched as is.
-table(meanstd) //R
+table(meanstd) 
 ```
 
 6. Extract all 66 measurements on the on the mean and standard deviation to another vector ``varSelected``. The variable names were renamed according to [Google R style guide][2]:
@@ -50,7 +50,7 @@ table(meanstd) //R
 
 ```R
 varSelected <- gsub("()", "", gsub("-", ".", features[meanstd,2]), fixed=T) #rename variables
-length(varSelected) //R
+length(varSelected) 
 ```
 
 7. Read in the test data and train data, which including the subject data, activity data, and 561 measurements. There are 2947 rows in test data and 7352 rows in train data.
@@ -72,7 +72,7 @@ xtrain <- read.table(".\\UCI HAR Dataset\\train\\X_train.txt")
 xtrainSelected <- xtrain[,meanstd] # subset the mean and std variables
 names(xtrainSelected) <- varSelected # rename the selected variables
 
-train <- data.frame(subjecttrain, ytrain, xtrainSelected) # merge into train data //R
+train <- data.frame(subjecttrain, ytrain, xtrainSelected) # merge into train data 
 
 ```
 
@@ -83,7 +83,7 @@ combine <- rbind(train, test)
 dim(combine)
 combine$subject <- factor(combine$subject)
 combine$activity <- factor(combine$activity)
-levels(combine$activity) <- activitylabels[,2] //R
+levels(combine$activity) <- activitylabels[,2] 
 ```
 
 9. 5.Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
@@ -93,7 +93,7 @@ levels(combine$activity) <- activitylabels[,2] //R
 s <- split(combine, list(combine$subject, combine$activity), drop=TRUE)
 tidy <- sapply(s, function(x) colMeans(x[, varSelected]))
 dim(tidy)
-write.table(tidy, file="TidyData.txt", sep="\t") //R
+write.table(tidy, file="TidyData.txt", sep="\t") 
 ```
 
 [1]: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
